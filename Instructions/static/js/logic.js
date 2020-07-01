@@ -2,20 +2,20 @@
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // map object creation
-var myMap = L.map("map", {
+var geoMap = L.map("map", {
     center: [38.5816, -121.4944],
     zoom: 5,
 });
 
 // tilelayer
-var streetMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+var roadMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openroadMap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
     zoomOffset: -1,
     id: "mapbox/streets-v11",
     accessToken: API_KEY
-}).addTo(myMap);
+}).addTo(geoMap);
 
 // geoJSON
 d3.json(url, function(data) {
@@ -54,7 +54,7 @@ function createFeatures(earthquakeData){
             radius : feature.properties.mag * 10000
         })
         .bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>")
-        .addTo(myMap);
+        .addTo(geoMap);
     }
 
     var earthquakes = L.geoJson(earthquakeData, {
@@ -66,7 +66,7 @@ function createFeatures(earthquakeData){
 
 var legend = L.control({position: 'bottomright'});
 
-legend.onAdd = function (myMap) {
+legend.onAdd = function (geoMap) {
     var div = L.DomUtil.create('div', 'info legend'),
         labels = ['0-1', '1-2', '2-3', '3-4', '4-5', '5+'];
         colors = [' #f1eef6',' #d0d1e6',' #a6bddb',' #74a9cf',' #2b8cbe',' #045a8d']
@@ -78,4 +78,4 @@ legend.onAdd = function (myMap) {
     return div; 
 };
 
-legend.addTo(myMap);
+legend.addTo(geoMap);
